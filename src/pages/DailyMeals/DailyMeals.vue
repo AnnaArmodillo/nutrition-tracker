@@ -6,6 +6,8 @@ import type { IMealEntryParams } from '@/types/interfaces'
 import { useDailyMealsStore } from '@/stores/dailyMeals'
 import { useProductsStore } from '@/stores/products'
 import DailyMealForm from './components/DailyMealForm.vue'
+import NormCoverage from './components/NormCoverage.vue'
+import { useNutritionStore } from '@/stores/nutrition.ts'
 
 const store = useDailyMealsStore()
 
@@ -25,6 +27,9 @@ const {
 
 const productsStore = useProductsStore()
 const { products } = storeToRefs(productsStore)
+
+const nutritionStore = useNutritionStore()
+const { factTotal } = storeToRefs(nutritionStore)
 
 const getTodayString = () => {
   const today = new Date()
@@ -93,6 +98,9 @@ const onRemoveMeal = (mealId: number) => {
         Добавить запись
       </button>
     </div>
+    <NormCoverage
+      :factTotal="factTotal ?? {}"
+    />
     <DailyMealForm
       v-if="isMealFormOpened"
       :productList="products"

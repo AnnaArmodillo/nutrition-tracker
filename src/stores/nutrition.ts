@@ -71,76 +71,56 @@ export const useNutritionStore = defineStore('nutrition', () => {
     }, 0)
   })
 
-  const factNutrients = computed(() => {
-    if (!totalNutrientsByDate.value) {
-      return null
-    }
+  const calculateNutrientData = (key: keyof Omit<INutrients, 'calories'>) => {
+    // норма потребления нутриента
+    const norm = dailyNorm.value[key]
 
-    // нормы потребления нутриентов
-    const proteinsNorm = dailyNorm.value.proteins
-    const fatsNorm = dailyNorm.value.fats
-    const carbohydratesNorm = dailyNorm.value.carbohydrates
-
-    // фактический вес потребленных нутриентов
-    const proteinsFactWeight = Number(totalNutrientsByDate.value?.proteins ?? 0)
-    const fatsFactWeight = Number(totalNutrientsByDate.value?.fats ?? 0)
-    const carbohydratesFactWeight = Number(totalNutrientsByDate.value?.carbohydrates ?? 0)
+    // вес фактически потребленного нутриента
+    const factWeight = Number(totalNutrientsByDate.value?.[key] ?? 0)
 
     // фактическое потребление от нормы
-    const proteinsNormCoverage = proteinsNorm > 0 ? proteinsFactWeight / proteinsNorm * 100 : 0
-    const fatsNormCoverage = fatsNorm > 0 ? fatsFactWeight / fatsNorm * 100 : 0
-    const carbohydratesNormCoverage = carbohydratesNorm > 0 ? carbohydratesFactWeight / carbohydratesNorm * 100 : 0
+    const normCoverage = norm > 0 ? factWeight / norm * 100 : 0
 
-    // процент потребленных нутриентов от общего веса
-    const proteinsFactFromTotal = totalFactWeight.value > 0
-      ? proteinsFactWeight / totalFactWeight.value * 100
-      : 0
-    const fatsFactFromTotal = totalFactWeight.value > 0
-      ? fatsFactWeight / totalFactWeight.value * 100
-      : 0
-    const carbohydratesFactFromTotal = totalFactWeight.value > 0
-      ? carbohydratesFactWeight / totalFactWeight.value * 100
+    // процент потребленного нутриента от общего веса
+    const factFromTotal = totalFactWeight.value > 0
+      ? factWeight / totalFactWeight.value * 100
       : 0
 
     // нормальный % потребления нутриентов от общего веса
-    const proteinsNormFromTotal = nutrientsNormFromTotalWeight.value.proteins
-    const fatsNormFromTotal = nutrientsNormFromTotalWeight.value.fats
-    const carbohydratesNormFromTotal = nutrientsNormFromTotalWeight.value.carbohydrates
+    const normFromTotal = nutrientsNormFromTotalWeight.value[key]
 
-    // разница долей нутриентов между нормой и фактом
-    const proteinsDiff = Math.abs(proteinsNormFromTotal - proteinsFactFromTotal)
-    const fatsDiff = Math.abs(fatsNormFromTotal - fatsFactFromTotal)
-    const carbohydratesDiff = Math.abs(carbohydratesNormFromTotal - carbohydratesFactFromTotal)
+    // разница доли нутриента между нормой и фактом
+    const diff = Math.abs(normFromTotal - factFromTotal)
 
-    // отклонение разницы долей нутриентов от нормы в %
-    const proteinsPercentDiff = proteinsDiff / proteinsNormFromTotal * 100
-    const fatsPercentDiff = fatsDiff / fatsNormFromTotal * 100
-    const carbohydratesPercentDiff = carbohydratesDiff / carbohydratesNormFromTotal * 100
+    // отклонение разницы доли нутриента от нормы в %
+    const percentDiff = diff / normFromTotal * 100
+
+    return {
+      normValue: norm,
+      value: factWeight,
+      normCoverage: normCoverage,
+      hasDeviation: normCoverage <= MIN_NORM_COVERAGE || normCoverage >= MAX_NORM_COVERAGE,
+      isBalancedByTotalWeight: percentDiff <= MAX_DIFF
+    }
+  }
+
+  const factNutrients = computed(() => {
+    if (!totalNutrientsByDate.value?.weight) {
+      return null
+    }
 
     return {
       proteins: {
         title: 'Белки',
-        targetValue: proteinsNorm,
-        value: totalNutrientsByDate.value?.proteins ?? 0,
-        normCoverage: proteinsNormCoverage.toFixed(1),
-        hasDeviation: proteinsNormCoverage <= MIN_NORM_COVERAGE || proteinsNormCoverage >= MAX_NORM_COVERAGE,
-        isBalancedByTotalWeight: proteinsPercentDiff <= MAX_DIFF
+        ...calculateNutrientData('proteins')
       },
       fats: {
         title: 'Жиры',
-        targetValue: fatsNorm,
-        value: totalNutrientsByDate.value?.fats ?? 0,
-        normCoverage: fatsNormCoverage.toFixed(1),
-        hasDeviation: fatsNormCoverage <= MIN_NORM_COVERAGE || fatsNormCoverage >= MAX_NORM_COVERAGE,
-        isBalancedByTotalWeight: fatsPercentDiff <= MAX_DIFF
+        ...calculateNutrientData('fats')
       },
       carbohydrates: {
         title: 'Углеводы',
-        targetValue: carbohydratesNorm,
-        value: totalNutrientsByDate.value?.carbohydrates ?? 0,
-        normCoverage: carbohydratesNormCoverage.toFixed(1),
-        hasDeviation: carbohydratesNormCoverage <= MIN_NORM_COVERAGE || carbohydratesNormCoverage >= MAX_NORM_COVERAGE,
-        isBalancedByTotalWeight: carbohydratesPercentDiff <= MAX_DIFF
+        ...calculateNutrientData('carbohydrates')
       }
     }
   })
@@ -153,10 +133,10 @@ export const useNutritionStore = defineStore('nutrition', () => {
     return {
       ...factNutrients.value,
       calories: {
-        title: 'Килокалории',
-        targetValue: dailyNorm.value.calories,
-        value: totalNutrientsByDate.value?.calories ?? 0,
-        normCoverage: caloriesNormCoverage.toFixed(1),
+        title: 'Калории',
+        normValue: dailyNorm.value.calories,
+        value: Number(totalNutrientsByDate.value?.calories ?? 0),
+        normCoverage: caloriesNormCoverage,
         hasDeviation: caloriesNormCoverage <= MIN_NORM_COVERAGE || caloriesNormCoverage >= MAX_NORM_COVERAGE,
       }
     }
@@ -171,7 +151,7 @@ export const useNutritionStore = defineStore('nutrition', () => {
   })
 
   const isDailyDataExist = computed(() => {
-    return !!totalNutrientsByDate.value
+    return Number(totalNutrientsByDate.value?.weight ?? 0) > 0
   })
 
   return {

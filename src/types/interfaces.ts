@@ -22,3 +22,11 @@ export interface IMealEntryParams {
 export interface IMealEntry extends IMealEntryParams {
   id: number
 }
+
+export interface INutrientData {
+  title: string
+  normValue: number
+  value: number
+  normCoverage: number
+  hasDeviation: boolean
+}

@@ -54,7 +54,7 @@ const progressOverviewOption = computed(() => {
         },
         data: [
           {
-            value: Object.values(factTotal.value ?? {}).map((item) => item.normCoverage),
+            value: Object.values(factTotal.value ?? {}).map((item) => item.normCoverage.toFixed(1)),
             name: 'Фактическое потребление, % от нормы'
           },
           {
@@ -123,7 +123,7 @@ const progressTrendOption = computed(() => {
         emphasis: {
           focus: 'series'
         },
-        data: Object.values(factTotal.value ?? {}).map((item) => item.targetValue),
+        data: Object.values(factTotal.value ?? {}).map((item) => item.normValue),
       },
       {
         name: 'Фактическое потребление, ед.',
@@ -185,7 +185,7 @@ const onSelectChart = (type: TChartType) => {
     </div>
     <div
       v-else
-      class="flex flex-col gap-2 grow"
+      class="flex flex-col gap-2 grow select-none"
     >
       <nav
         class="flex gap-2"

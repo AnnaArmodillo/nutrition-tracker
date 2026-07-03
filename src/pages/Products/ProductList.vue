@@ -82,7 +82,7 @@ const onSaveProduct = (params: IProductParams) => {
           <th class="border border-blue-500 p-1">Белки</th>
           <th class="border border-blue-500 p-1">Жиры</th>
           <th class="border border-blue-500 p-1">Углеводы</th>
-          <th class="border border-blue-500 p-1">Килокалории</th>
+          <th class="border border-blue-500 p-1">Калории</th>
         </tr>
       </thead>
       <tbody>

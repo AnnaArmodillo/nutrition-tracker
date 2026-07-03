@@ -45,7 +45,6 @@ export const useDailyMealsStore = defineStore('dailyMeals', () => {
   })
 
   const totalNutrientsByDate = computed(() => {
-    if (!entriesByDateWithNutrients.value.length) return null
     const total = entriesByDateWithNutrients.value.reduce((acc, e) => {
       acc.weight += Number(e.weight)
       acc.proteins += Number(e.proteins)
