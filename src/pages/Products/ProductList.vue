@@ -70,7 +70,7 @@ const onSaveProduct = (params: IProductParams) => {
       v-else-if="!products.length"
       class="flex justify-center"
     >
-      Пока список продуктов пуст
+      Пока справочник пуст
     </div>
     <table
       v-else

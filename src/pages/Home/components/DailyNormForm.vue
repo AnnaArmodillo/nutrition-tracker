@@ -3,22 +3,22 @@ import { computed, ref } from 'vue'
 
 import type { INutrients } from '@/types/interfaces'
 
-  interface IProps {
-    targetNutrients: INutrients
-  }
+interface IProps {
+  dailyNorm: INutrients
+}
 
 const {
-  targetNutrients
+  dailyNorm
 } = defineProps<IProps>()
 
 const emits = defineEmits<{
     save: [ params: INutrients ]
   }>()
 
-const proteins = ref<number | string | undefined>(targetNutrients?.proteins ?? undefined)
-const fats = ref<number | string | undefined>(targetNutrients?.fats ?? undefined)
-const carbohydrates = ref<number | string | undefined>(targetNutrients?.carbohydrates ?? undefined)
-const calories = ref<number | string | undefined>(targetNutrients?.calories ?? undefined)
+const proteins = ref<number | string | undefined>(dailyNorm?.proteins ?? undefined)
+const fats = ref<number | string | undefined>(dailyNorm?.fats ?? undefined)
+const carbohydrates = ref<number | string | undefined>(dailyNorm?.carbohydrates ?? undefined)
+const calories = ref<number | string | undefined>(dailyNorm?.calories ?? undefined)
 
 const isFormValid = computed(() => {
   return (
@@ -31,10 +31,10 @@ const isFormValid = computed(() => {
 
 const isFormDirty = computed(() => {
   return (
-    proteins.value !== targetNutrients.proteins ||
-      fats.value !== targetNutrients.fats ||
-      carbohydrates.value !== targetNutrients.carbohydrates ||
-      calories.value !== targetNutrients.calories
+    proteins.value !== dailyNorm.proteins ||
+      fats.value !== dailyNorm.fats ||
+      carbohydrates.value !== dailyNorm.carbohydrates ||
+      calories.value !== dailyNorm.calories
   )
 })
 
