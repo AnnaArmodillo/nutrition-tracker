@@ -5,12 +5,9 @@
   font-weight: normal;
 }
 
-a,
-.green {
+a {
   text-decoration: none;
-  color: rgb(36, 59, 189);
   transition: 0.4s;
-  padding: 3px;
 }
 
 @media (hover: hover) {
