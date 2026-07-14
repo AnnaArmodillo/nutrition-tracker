@@ -8,18 +8,17 @@ export const useProductsStore = defineStore('products', () => {
   const addProduct = (params: IProductParams) => {
     const newProduct = {
       ...params,
-      id: Date.now()
+      id: Date.now() + Math.random()
     }
     products.value = [ ...products.value, newProduct ]
   }
 
   const editProduct = (product: IProduct) => {
-    products.value = products.value.map((p) => {
-      if (p.id === product.id) {
-        return product
-      }
-      return p
-    })
+    const index = products.value.findIndex(p => p.id === product.id)
+    if (index === -1) {
+      return
+    }
+    products.value = products.value.map((p) => p.id === product.id ? { ...product } : p)
   }
 
   return {

@@ -55,6 +55,7 @@ const onSaveProduct = (params: IProductParams) => {
         class="bg-blue-100 p-2 rounded-md"
         :class="isProductFormOpened ? 'opacity-50 cursor-default' : 'cursor-pointer'"
         :disabled="isProductFormOpened"
+        data-test="add-product-btn"
         @click="onOpenProductForm"
       >
         Добавить
@@ -90,6 +91,7 @@ const onSaveProduct = (params: IProductParams) => {
           <td class="border border-blue-500 p-1">
             <button
               class="cursor-pointer underline"
+              :data-test="product.name"
               @click="onSelectProduct(product)"
             >
               {{ product.name }}

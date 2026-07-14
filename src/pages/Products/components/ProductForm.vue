@@ -57,6 +57,7 @@ const onCancel = () => {
       v-model="name"
       type="text"
       placeholder="Название продукта"
+      data-test="product-name"
       class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
     />
     <div class="grid grid-cols-2 gap-2">
@@ -65,6 +66,7 @@ const onCancel = () => {
         <input
           v-model="proteins"
           type="number"
+          data-test="product-proteins"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -74,6 +76,7 @@ const onCancel = () => {
         <input
           v-model="fats"
           type="number"
+          data-test="product-fats"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -83,6 +86,7 @@ const onCancel = () => {
         <input
           v-model="carbohydrates"
           type="number"
+          data-test="product-carbohydrates"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -92,6 +96,7 @@ const onCancel = () => {
         <input
           v-model="calories"
           type="number"
+          data-test="product-calories"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -99,6 +104,7 @@ const onCancel = () => {
     <div class="flex gap-2">
       <button
         class="p-2 rounded-md cursor-pointer border border-solid border-blue-500"
+        data-test="product-form-cancel-btn"
         @click="onCancel"
       >
         Отмена
@@ -107,6 +113,7 @@ const onCancel = () => {
         class="bg-blue-100 p-2 rounded-md"
         :class="isFormValid ? 'cursor-pointer' : 'opacity-50 cursor-default'"
         :disabled="!isFormValid"
+        data-test="product-form-save-btn"
         @click="onSave"
       >
         Сохранить
