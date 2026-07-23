@@ -3,18 +3,18 @@ import { computed, ref } from 'vue'
 
 import type { IProductParams, IProduct } from '@/types/interfaces'
 
-  interface IProps {
-    product?: IProduct
-  }
+interface IProps {
+  product?: IProduct
+}
 
 const {
   product
 } = defineProps<IProps>()
 
 const emits = defineEmits<{
-    save: [ params: IProductParams ]
-    cancel: [ ]
-  }>()
+  save: [ params: IProductParams ]
+  cancel: [ ]
+}>()
 
 const name = ref<string>(product?.name ?? '')
 const proteins = ref<number | string | undefined>(product?.proteins ?? undefined)
@@ -25,10 +25,10 @@ const calories = ref<number | string | undefined>(product?.calories ?? undefined
 const isFormValid = computed(() => {
   return (
     name.value !== '' &&
-      proteins.value !== undefined && proteins.value !== '' &&
-      fats.value !== undefined && fats.value !== '' &&
-      carbohydrates.value !== undefined && carbohydrates.value !== '' &&
-      calories.value !== undefined && calories.value !== ''
+    proteins.value !== undefined && proteins.value !== '' &&
+    fats.value !== undefined && fats.value !== '' &&
+    carbohydrates.value !== undefined && carbohydrates.value !== '' &&
+    calories.value !== undefined && calories.value !== ''
   )
 })
 

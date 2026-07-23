@@ -12,29 +12,29 @@ const {
 } = defineProps<IProps>()
 
 const emits = defineEmits<{
-    save: [ params: INutrients ]
-  }>()
+  save: [ params: INutrients ]
+}>()
 
-const proteins = ref<number | string | undefined>(dailyNorm?.proteins ?? undefined)
-const fats = ref<number | string | undefined>(dailyNorm?.fats ?? undefined)
-const carbohydrates = ref<number | string | undefined>(dailyNorm?.carbohydrates ?? undefined)
-const calories = ref<number | string | undefined>(dailyNorm?.calories ?? undefined)
+const proteins = ref<number | string | undefined>(dailyNorm.proteins)
+const fats = ref<number | string | undefined>(dailyNorm.fats)
+const carbohydrates = ref<number | string | undefined>(dailyNorm.carbohydrates)
+const calories = ref<number | string | undefined>(dailyNorm.calories)
 
 const isFormValid = computed(() => {
   return (
-    proteins.value !== undefined && proteins.value !== '' &&
-      fats.value !== undefined && fats.value !== '' &&
-      carbohydrates.value !== undefined && carbohydrates.value !== '' &&
-      calories.value !== undefined && calories.value !== ''
+    proteins.value !== '' &&
+    fats.value !== '' &&
+    carbohydrates.value !== '' &&
+    calories.value !== ''
   )
 })
 
 const isFormDirty = computed(() => {
   return (
     proteins.value !== dailyNorm.proteins ||
-      fats.value !== dailyNorm.fats ||
-      carbohydrates.value !== dailyNorm.carbohydrates ||
-      calories.value !== dailyNorm.calories
+    fats.value !== dailyNorm.fats ||
+    carbohydrates.value !== dailyNorm.carbohydrates ||
+    calories.value !== dailyNorm.calories
   )
 })
 
@@ -60,6 +60,7 @@ const onSave = () => {
         <input
           v-model="proteins"
           type="number"
+          data-test="proteins-norm"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -69,6 +70,7 @@ const onSave = () => {
         <input
           v-model="fats"
           type="number"
+          data-test="fats-norm"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -78,6 +80,7 @@ const onSave = () => {
         <input
           v-model="carbohydrates"
           type="number"
+          data-test="carbohydrates-norm"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -87,6 +90,7 @@ const onSave = () => {
         <input
           v-model="calories"
           type="number"
+          data-test="calories-norm"
           class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
         />
       </div>
@@ -95,6 +99,7 @@ const onSave = () => {
       class="bg-blue-100 p-2 rounded-md"
       :class="isFormValid && isFormDirty ? 'cursor-pointer' : 'opacity-50 cursor-default'"
       :disabled="!isFormValid || !isFormDirty"
+      data-test="daily-norm-save-btn"
       @click="onSave"
     >
       Сохранить
