@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import type { IMealEntry, IMealEntryParams } from '@/types/interfaces'
 import { useProductsStore } from './products'
 
@@ -14,7 +14,8 @@ export const useDailyMealsStore = defineStore('dailyMeals', () => {
     return entries.value.find((e) => e.id === selectedMealId.value)
   })
 
-  const { products } = useProductsStore()
+  const productsStore = useProductsStore()
+  const { products } = storeToRefs(productsStore)
 
   const entriesByDate = computed(() => {
     return entries.value.filter((e) => e.date === selectedDate.value)
@@ -22,7 +23,7 @@ export const useDailyMealsStore = defineStore('dailyMeals', () => {
 
   const entriesByDateWithNutrients = computed(() => {
     return entriesByDate.value.map((e) => {
-      const product = products.find((p) => p.id === e.productId)
+      const product = products.value.find((p) => p.id === e.productId)
       if (!product) return {
         id: e.id,
         name: '',
@@ -71,7 +72,7 @@ export const useDailyMealsStore = defineStore('dailyMeals', () => {
   const addEntry = (params: Omit<IMealEntryParams, 'date'>) => {
     const newProduct = {
       ...params,
-      id: Date.now(),
+      id: Date.now() + Math.random(),
       date: selectedDate.value
     }
     entries.value = [ ...entries.value, newProduct ]
