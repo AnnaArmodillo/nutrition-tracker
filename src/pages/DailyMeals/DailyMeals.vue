@@ -88,18 +88,20 @@ const onRemoveMeal = (mealId: number) => {
         v-model="date"
         type="date"
         class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
+        data-test="daily-meals-date"
       />
       <button
         class="bg-blue-100 p-2 rounded-md"
         :class="isMealFormOpened ? 'opacity-50 cursor-default' : 'cursor-pointer'"
         :disabled="isMealFormOpened"
+        data-test="add-meal-entry-btn"
         @click="onOpenMealForm"
       >
         Добавить запись
       </button>
     </div>
     <NormCoverage
-      :factTotal="factTotal ?? {}"
+      :factTotal="factTotal"
     />
     <DailyMealForm
       v-if="isMealFormOpened"
@@ -134,12 +136,14 @@ const onRemoveMeal = (mealId: number) => {
             <div class="flex justify-between items-center">
               <button
                 class="cursor-pointer underline"
+                :data-test="meal.id"
                 @click="onSelectMeal(meal.id)"
               >
                 {{ meal.name }}
               </button>
               <button
                 class="cursor-pointer bg-blue-500 p-1 rounded-md flex h-fit text-sm/4"
+                :data-test="`remove-meal-${meal.id}-btn`"
                 @click="onRemoveMeal(meal.id)"
               >
                 &times;

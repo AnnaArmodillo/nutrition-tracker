@@ -50,6 +50,7 @@ const onCancel = () => {
       v-model="productId"
       class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
       placeholder="Вес, г"
+      data-test="meal-product-select"
     >
       <option disabled value="">Выберите продукт</option>
       <option
@@ -65,10 +66,12 @@ const onCancel = () => {
       type="number"
       placeholder="Вес, гр"
       class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
+      data-test="meal-weight"
     />
     <div class="flex gap-2">
       <button
         class="p-2 rounded-md cursor-pointer border border-solid border-blue-500"
+        data-test="meal-form-cancel-btn"
         @click="onCancel"
       >
         Отмена
@@ -77,6 +80,7 @@ const onCancel = () => {
         class="bg-blue-100 p-2 rounded-md"
         :class="isFormValid ? 'cursor-pointer' : 'opacity-50 cursor-default'"
         :disabled="!isFormValid"
+        data-test="meal-form-save-btn"
         @click="onSave"
       >
         Сохранить

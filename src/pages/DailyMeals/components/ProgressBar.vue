@@ -1,17 +1,17 @@
 <script setup lang="ts">
 interface IProps {
   label: string
-  current: number
-  norm: number
-  normCoverage: number
+  current?: number
+  norm?: number
+  normCoverage?: number
   unit: string
 }
 
 const {
   label,
-  current,
+  current = 0,
   norm,
-  normCoverage,
+  normCoverage = 0,
   unit
 } = defineProps<IProps>()
 

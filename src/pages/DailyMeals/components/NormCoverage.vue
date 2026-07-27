@@ -3,11 +3,11 @@ import type { INutrientData } from '@/types/interfaces'
 import ProgressBar from './ProgressBar.vue'
 
 interface IProps {
-  factTotal: Record<string, INutrientData>
+  factTotal: Record<string, INutrientData> | null
 }
 
 const {
-  factTotal
+  factTotal = {}
 } = defineProps<IProps>()
 
 </script>
@@ -15,30 +15,30 @@ const {
   <div class="grid grid-cols-2 gap-2">
     <ProgressBar
       label="Белки"
-      :current="factTotal.proteins?.value ?? 0"
-      :norm="factTotal.proteins?.normValue ?? 0"
-      :normCoverage="factTotal.proteins?.normCoverage ?? 0"
+      :current="factTotal?.proteins?.value"
+      :norm="factTotal?.proteins?.normValue"
+      :normCoverage="factTotal?.proteins?.normCoverage"
       unit="г"
     />
     <ProgressBar
       label="Жиры"
-      :current="factTotal.fats?.value ?? 0"
-      :norm="factTotal.fats?.normValue ?? 0"
-      :normCoverage="factTotal.fats?.normCoverage ?? 0"
+      :current="factTotal?.fats?.value"
+      :norm="factTotal?.fats?.normValue"
+      :normCoverage="factTotal?.fats?.normCoverage"
       unit="г"
     />
     <ProgressBar
       label="Углеводы"
-      :current="factTotal.carbohydrates?.value ?? 0"
-      :norm="factTotal.carbohydrates?.normValue ?? 0"
-      :normCoverage="factTotal.carbohydrates?.normCoverage ?? 0"
+      :current="factTotal?.carbohydrates?.value"
+      :norm="factTotal?.carbohydrates?.normValue"
+      :normCoverage="factTotal?.carbohydrates?.normCoverage"
       unit="г"
     />
     <ProgressBar
       label="Калории"
-      :current="factTotal.calories?.value ?? 0"
-      :norm="factTotal.calories?.normValue ?? 0"
-      :normCoverage="factTotal.calories?.normCoverage ?? 0"
+      :current="factTotal?.calories?.value"
+      :norm="factTotal?.calories?.normValue"
+      :normCoverage="factTotal?.calories?.normCoverage"
       unit="ккал"
     />
   </div>

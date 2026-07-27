@@ -79,12 +79,11 @@ export const useDailyMealsStore = defineStore('dailyMeals', () => {
   }
 
   const editEntry = (entry: IMealEntry) => {
-    entries.value = entries.value.map((e) => {
-      if (e.id === entry.id) {
-        return entry
-      }
-      return e
-    })
+    const index = entries.value.findIndex(e => e.id === entry.id)
+    if (index === -1) {
+      return
+    }
+    entries.value = entries.value.map((e) => e.id === entry.id ? { ...entry } : e)
   }
 
   const removeEntry = (id: number) => {
