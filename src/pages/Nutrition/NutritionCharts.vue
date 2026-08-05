@@ -34,14 +34,13 @@ const {
 } = store
 
 const progressOverviewOption = computed(() => {
-  if (!factTotal.value) return {}
   return {
     tooltip: {
       trigger: 'item'
     },
     radar: {
       shape: 'circle',
-      indicator: Object.values(factTotal.value ?? {}).map((item) => ({
+      indicator: Object.values(factTotal.value).map((item) => ({
         name: item.title,
         max: maxFactNormCoverage.value
       }))
@@ -54,11 +53,11 @@ const progressOverviewOption = computed(() => {
         },
         data: [
           {
-            value: Object.values(factTotal.value ?? {}).map((item) => item.normCoverage.toFixed(1)),
+            value: Object.values(factTotal.value).map((item) => item.normCoverage.toFixed(1)),
             name: 'Фактическое потребление, % от нормы'
           },
           {
-            value: Object.values(factTotal.value ?? {}).map(() => 100),
+            value: Object.values(factTotal.value).map(() => 100),
             name: 'Суточная норма, %'
           }
         ]
@@ -68,7 +67,6 @@ const progressOverviewOption = computed(() => {
 })
 
 const nutrientPercentageOption = computed(() => {
-  if (!factNutrients.value) return {}
   return {
     tooltip: {
       trigger: 'item',
@@ -78,13 +76,13 @@ const nutrientPercentageOption = computed(() => {
       {
         type: 'pie',
         radius: '50%',
-        data: Object.values(factNutrients.value ?? {}).map((item) => ({
+        data: Object.values(factNutrients.value).map((item) => ({
           name: item.title,
           value: item.value,
           itemStyle: {
             borderColor: item.isBalancedByTotalWeight ? '#00AA00' : '#AA0000',
             borderWidth: 2
-          }
+          },
         }))
       },
     ]
@@ -92,7 +90,6 @@ const nutrientPercentageOption = computed(() => {
 })
 
 const progressTrendOption = computed(() => {
-  if (!factTotal.value) return {}
   return {
     title: {
       subtext: `Синим цветом отмечены значения нормы. Фактическое потребление, соответствующее суточной норме, отмечено зелёным
@@ -108,7 +105,7 @@ const progressTrendOption = computed(() => {
     xAxis: [
       {
         type: 'category',
-        data: Object.values(factTotal.value ?? {}).map((item) => item.title),
+        data: Object.values(factTotal.value).map((item) => item.title),
       }
     ],
     yAxis: [
@@ -123,7 +120,7 @@ const progressTrendOption = computed(() => {
         emphasis: {
           focus: 'series'
         },
-        data: Object.values(factTotal.value ?? {}).map((item) => item.normValue),
+        data: Object.values(factTotal.value).map((item) => item.normValue),
       },
       {
         name: 'Фактическое потребление, ед.',
@@ -132,7 +129,7 @@ const progressTrendOption = computed(() => {
           focus: 'series'
         },
         colorBy: 'data',
-        data: Object.values(factTotal.value ?? {}).map((item) => ({
+        data: Object.values(factTotal.value).map((item) => ({
           value: item.value,
           itemStyle: {
             color: item.hasDeviation ? '#AA0000' : '#00AA00'
@@ -175,6 +172,7 @@ const onSelectChart = (type: TChartType) => {
         v-model="date"
         type="date"
         class="border border-solid border-blue-500 rounded-md p-1 focus:outline focus:outline-blue-500"
+        data-test="nutrition-charts-date"
       />
     </div>
     <div
@@ -196,6 +194,7 @@ const onSelectChart = (type: TChartType) => {
             ? 'bg-fuchsia-400 outline outline-fuchsia-800 text-fuchsia-100'
             : 'bg-fuchsia-100'
           "
+          data-test="progress-overview-chart"
           @click="onSelectChart('progressOverview')"
         >
           Процент потребления от нормы
@@ -206,6 +205,7 @@ const onSelectChart = (type: TChartType) => {
             ? 'bg-fuchsia-400 outline outline-fuchsia-800 text-fuchsia-100'
             : 'bg-fuchsia-100'
           "
+          data-test="progress-trend-chart"
           @click="onSelectChart('progressTrend')"
         >
           Потребление от нормы в абсолютных значениях
@@ -216,6 +216,7 @@ const onSelectChart = (type: TChartType) => {
             ? 'bg-fuchsia-400 outline outline-fuchsia-800 text-fuchsia-100'
             : 'bg-fuchsia-100'
           "
+          data-test="daily-composition-chart"
           @click="onSelectChart('dailyComposition')"
         >
           Распределение нутриентов

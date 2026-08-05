@@ -62,9 +62,9 @@ export const useNutritionStore = defineStore('nutrition', () => {
   })
 
   const totalFactWeight = computed(() => {
-    return Object.entries(totalNutrientsByDate.value ?? {}).reduce((acc, [ key, value ]) => {
+    return Object.entries(totalNutrientsByDate.value).reduce((acc, [ key, value ]) => {
       if (key !== 'calories' && key !== 'weight') {
-        return acc + Number(value ?? 0)
+        return acc + Number(value)
       } else {
         return acc
       }
@@ -76,7 +76,7 @@ export const useNutritionStore = defineStore('nutrition', () => {
     const norm = dailyNorm.value[key]
 
     // вес фактически потребленного нутриента
-    const factWeight = Number(totalNutrientsByDate.value?.[key] ?? 0)
+    const factWeight = Number(totalNutrientsByDate.value?.[key])
 
     // фактическое потребление от нормы
     const normCoverage = norm > 0 ? factWeight / norm * 100 : 0
@@ -105,10 +105,6 @@ export const useNutritionStore = defineStore('nutrition', () => {
   }
 
   const factNutrients = computed(() => {
-    if (!totalNutrientsByDate.value?.weight) {
-      return null
-    }
-
     return {
       proteins: {
         title: 'Белки',
@@ -126,16 +122,15 @@ export const useNutritionStore = defineStore('nutrition', () => {
   })
 
   const factTotal = computed(() => {
-    if (!factNutrients.value) return null
     const caloriesNormCoverage = dailyNorm.value.calories > 0
-      ? Number(totalNutrientsByDate.value?.calories ?? 0) / dailyNorm.value.calories * 100
+      ? Number(totalNutrientsByDate.value?.calories) / dailyNorm.value.calories * 100
       : 0
     return {
       ...factNutrients.value,
       calories: {
         title: 'Калории',
         normValue: dailyNorm.value.calories,
-        value: Number(totalNutrientsByDate.value?.calories ?? 0),
+        value: Number(totalNutrientsByDate.value?.calories),
         normCoverage: caloriesNormCoverage,
         hasDeviation: caloriesNormCoverage <= MIN_NORM_COVERAGE || caloriesNormCoverage >= MAX_NORM_COVERAGE,
       }
@@ -143,15 +138,15 @@ export const useNutritionStore = defineStore('nutrition', () => {
   })
 
   const maxFactNormCoverage = computed(() => {
-    return Math.max(...Object.values(factNutrients.value ?? {}).map(item => Number(item.normCoverage)), 100)
+    return Math.max(...Object.values(factNutrients.value).map(item => Number(item.normCoverage)), 100)
   })
 
   const isNutrientsProgressBalanced = computed(() => {
-    return Object.values(factTotal.value ?? {})?.every(item => !item.hasDeviation)
+    return Object.values(factTotal.value)?.every(item => !item.hasDeviation)
   })
 
   const isDailyDataExist = computed(() => {
-    return Number(totalNutrientsByDate.value?.weight ?? 0) > 0
+    return Number(totalNutrientsByDate.value?.weight) > 0
   })
 
   return {
