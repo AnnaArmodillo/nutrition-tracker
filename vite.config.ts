@@ -28,4 +28,5 @@ export default defineConfig({
       provider: playwright()
     },
   },
+  base: '/nutrition-tracker/'
 })
