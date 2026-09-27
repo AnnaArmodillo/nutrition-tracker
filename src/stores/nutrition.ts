@@ -3,6 +3,7 @@ import { defineStore, storeToRefs } from 'pinia'
 
 import type { INutrients } from '@/types/interfaces'
 import { useDailyMealsStore } from './dailyMeals'
+import { demoNorm } from '@/data/demo/norm'
 
 const MIN_NORM_COVERAGE = 85
 const MAX_NORM_COVERAGE = 115
@@ -149,6 +150,19 @@ export const useNutritionStore = defineStore('nutrition', () => {
     return Number(totalNutrientsByDate.value?.weight) > 0
   })
 
+  const resetDailyNorm = () => {
+    dailyNorm.value = {
+      proteins: 0,
+      fats: 0,
+      carbohydrates: 0,
+      calories: 0
+    }
+  }
+
+  const loadDemoNorm = () => {
+    dailyNorm.value = demoNorm
+  }
+
   return {
     dailyNorm,
     factNutrients,
@@ -157,7 +171,9 @@ export const useNutritionStore = defineStore('nutrition', () => {
     isNutrientsProgressBalanced,
     isDailyDataExist,
     setSelectedDate,
-    updateDailyNorm
+    updateDailyNorm,
+    resetDailyNorm,
+    loadDemoNorm
   }
 }, {
   persist: true

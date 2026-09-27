@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import type { INutrients } from '@/types/interfaces'
 
@@ -47,6 +47,13 @@ const onSave = () => {
     calories: calories.value! as number
   })
 }
+
+watch(() => dailyNorm,(newValue) => {
+  proteins.value = newValue.proteins
+  fats.value = newValue.fats
+  carbohydrates.value = newValue.carbohydrates
+  calories.value = newValue.calories
+})
 </script>
 
 <template>

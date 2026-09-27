@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IProduct, IProductParams } from '@/types/interfaces'
+import { demoProducts } from '@/data/demo/products'
 
 export const useProductsStore = defineStore('products', () => {
   const products = ref<IProduct[]>([])
@@ -21,10 +22,22 @@ export const useProductsStore = defineStore('products', () => {
     products.value = products.value.map((p) => p.id === product.id ? { ...product } : p)
   }
 
+  const resetProducts = () => {
+    products.value = []
+  }
+
+  const loadDemoProducts = () => {
+    demoProducts.forEach(p => {
+      addProduct(p)
+    })
+  }
+
   return {
     products,
     addProduct,
-    editProduct
+    editProduct,
+    resetProducts,
+    loadDemoProducts
   }
 }, {
   persist: true

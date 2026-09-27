@@ -8,6 +8,7 @@ import { useProductsStore } from '@/stores/products'
 import DailyMealForm from './components/DailyMealForm.vue'
 import NormCoverage from './components/NormCoverage.vue'
 import { useNutritionStore } from '@/stores/nutrition.ts'
+import { getDateString } from '@/utils/getDateString.ts'
 
 const store = useDailyMealsStore()
 
@@ -31,14 +32,7 @@ const { products } = storeToRefs(productsStore)
 const nutritionStore = useNutritionStore()
 const { factTotal } = storeToRefs(nutritionStore)
 
-const getTodayString = () => {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, '0')
-  const day = String(today.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-const date = ref<string>(getTodayString())
+const date = ref<string>(getDateString())
 
 watch(date, (newValue) => {
   setSelectedDate(newValue)
@@ -76,6 +70,10 @@ const onSelectMeal = (mealId: number) => {
 const onRemoveMeal = (mealId: number) => {
   removeMeal(mealId)
 }
+
+watch(meals, () => {
+  onCloseMealForm()
+})
 
 </script>
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import type { IProductParams, IProduct } from '@/types/interfaces'
@@ -44,6 +44,10 @@ const onSaveProduct = (params: IProductParams) => {
   isProductFormOpened.value = false
   selectedProduct.value = undefined
 }
+
+watch(products, () => {
+  onCloseProductForm()
+})
 
 </script>
 

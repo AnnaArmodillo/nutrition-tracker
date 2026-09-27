@@ -2,12 +2,15 @@ import { computed, ref } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import type { IMealEntry, IMealEntryParams } from '@/types/interfaces'
 import { useProductsStore } from './products'
+import { getDateString } from '@/utils/getDateString'
+import { demoMeals } from '@/data/demo/meals'
+import { getDateBefore } from '@/utils/getDateBefore'
 
 const GRAMS_TO_HUNDRED_GRAMS = 0.01
 
 export const useDailyMealsStore = defineStore('dailyMeals', () => {
   const entries = ref<IMealEntry[]>([])
-  const selectedDate = ref<string>('')
+  const selectedDate = ref<string>(getDateString())
 
   const selectedMealId = ref<number | undefined>(undefined)
   const selectedMealEntry = computed(() => {
@@ -102,6 +105,33 @@ export const useDailyMealsStore = defineStore('dailyMeals', () => {
     selectedMealId.value = undefined
   }
 
+  const resetEntries = () => {
+    entries.value = []
+  }
+
+  const loadDemoDailyMeals = () => {
+    const productIds = products.value.map(p => p.id)
+
+    const meals: IMealEntry[] = []
+
+    demoMeals.forEach((dailyMeal) => {
+      const { dayOffset, products } = dailyMeal
+      const dateString = getDateBefore(selectedDate.value, dayOffset)
+
+      products.forEach((product, index) => {
+        const { productIndex, weight } = product
+        meals.push({
+          productId: productIds[productIndex]!,
+          weight,
+          id: Date.now() + Math.random() + index + dayOffset * 100,
+          date: dateString,
+        })
+      })
+    })
+
+    entries.value = meals
+  }
+
   return {
     entries,
     entriesByDateWithNutrients,
@@ -112,7 +142,9 @@ export const useDailyMealsStore = defineStore('dailyMeals', () => {
     removeEntry,
     setSelectedDate,
     selectEntry,
-    unselectEntry
+    unselectEntry,
+    resetEntries,
+    loadDemoDailyMeals
   }
 }, {
   persist: true

@@ -8,6 +8,7 @@ import { RadarChart, PieChart, BarChart } from 'echarts/charts'
 import { TooltipComponent, GridComponent, TitleComponent } from 'echarts/components'
 
 import { useNutritionStore } from '@/stores/nutrition'
+import { getDateString } from '@/utils/getDateString'
 
 use([
   SVGRenderer,
@@ -140,15 +141,7 @@ const progressTrendOption = computed(() => {
   }
 })
 
-const getTodayString = () => {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, '0')
-  const day = String(today.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-const date = ref<string>(getTodayString())
+const date = ref<string>(getDateString())
 
 watch(date, (newValue) => {
   setSelectedDate(newValue)
