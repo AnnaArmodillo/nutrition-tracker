@@ -5,16 +5,16 @@ import { createPinia, setActivePinia, storeToRefs } from 'pinia'
 import HomeView from '@/pages/Home/HomeView.vue'
 import { useNutritionStore } from '@/stores/nutrition'
 
-describe('ProductList', () => {
+describe('HomeView', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
 
   it('загружает сохраненные нормы из стора и предзаполняет форму', () => {
     const store = useNutritionStore()
-    const { updateDailyNorm } = store
+    const { loadDemoNorm } = store
     const { dailyNorm } = storeToRefs(store)
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+    loadDemoNorm()
     const wrapper = mount(HomeView)
 
     const proteinsInput = wrapper.find('[data-test="proteins-norm"]')
@@ -38,20 +38,20 @@ describe('ProductList', () => {
     const wrapper = mount(HomeView)
 
     const proteinsInput = wrapper.find('[data-test="proteins-norm"]')
-    await proteinsInput.setValue('104')
+    await proteinsInput.setValue('20')
 
     const fatsInput = wrapper.find('[data-test="fats-norm"]')
-    await fatsInput.setValue('46')
+    await fatsInput.setValue('11')
 
     const carbohydratesInput = wrapper.find('[data-test="carbohydrates-norm"]')
-    await carbohydratesInput.setValue('138')
+    await carbohydratesInput.setValue('100')
 
     const caloriesInput = wrapper.find('[data-test="calories-norm"]')
-    await caloriesInput.setValue('1384')
+    await caloriesInput.setValue('1000')
 
     await wrapper.find('[data-test="daily-norm-save-btn"]').trigger('click')
 
-    expect(dailyNorm.value).toEqual({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+    expect(dailyNorm.value).toEqual({ proteins: 20, fats: 11, carbohydrates: 100, calories: 1000 })
   })
 
   it('не обновляет дневную норму, если форма невалидна (проверка onSave)', async () => {
@@ -70,5 +70,18 @@ describe('ProductList', () => {
     expect(dailyNorm.value.fats).toBe(0)
     expect(dailyNorm.value.carbohydrates).toBe(0)
     expect(dailyNorm.value.calories).toBe(0)
+  })
+
+  it('сбрасывает дневную норму', async () => {
+    const store = useNutritionStore()
+    const { dailyNorm } = storeToRefs(store)
+    const { loadDemoNorm, resetDailyNorm } = store
+    loadDemoNorm()
+
+    expect(dailyNorm.value).toEqual({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+
+    resetDailyNorm()
+
+    expect(dailyNorm.value).toEqual({ proteins: 0, fats: 0, carbohydrates: 0, calories: 0 })
   })
 })

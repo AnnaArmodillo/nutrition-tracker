@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia, storeToRefs } from 'pinia'
 
 import ProductList from '@/pages/Products/ProductList.vue'
@@ -12,8 +12,8 @@ describe('ProductList', () => {
   })
 
   it('отображает список продуктов из стора', () => {
-    const { addProduct } = useProductsStore()
-    addProduct({ name: 'Гречка', proteins: 4.2, fats: 1.1, carbohydrates: 21.3, calories: 111.9 })
+    const { loadDemoProducts } = useProductsStore()
+    loadDemoProducts()
     const wrapper = mount(ProductList)
 
     expect(wrapper.text()).toContain('Гречка')
@@ -51,8 +51,8 @@ describe('ProductList', () => {
   })
 
   it('выбирает продукт для редактирования', async () => {
-    const { addProduct } = useProductsStore()
-    addProduct({ name: 'Гречка', proteins: 4.2, fats: 1.1, carbohydrates: 21.3, calories: 111.9 })
+    const { loadDemoProducts } = useProductsStore()
+    loadDemoProducts()
     const wrapper = mount(ProductList)
 
     await wrapper.find('[data-test="Гречка"]').trigger('click')
@@ -61,8 +61,8 @@ describe('ProductList', () => {
 
   it('редактирует имя продукта', async () => {
     const store = useProductsStore()
-    const { addProduct } = store
-    addProduct({ name: 'Гречка', proteins: 4.2, fats: 1.1, carbohydrates: 21.3, calories: 111.9 })
+    const { loadDemoProducts } = store
+    loadDemoProducts()
     const wrapper = mount(ProductList)
 
     await wrapper.find('[data-test="Гречка"]').trigger('click')
@@ -94,8 +94,8 @@ describe('ProductList', () => {
 
   it('если редактируемого продукта нет в сторе, то стор не обновляется', () => {
     const store = useProductsStore()
-    const { addProduct, editProduct } = store
-    addProduct({ name: 'Гречка', proteins: 4.2, fats: 1.1, carbohydrates: 21.3, calories: 111.9 })
+    const { loadDemoProducts, editProduct } = store
+    loadDemoProducts()
     const initialProducts = store.products
     const nonExistentProduct = { id: 666, name: 'Не существует', proteins: 1, fats: 1, carbohydrates: 1, calories: 1 }
     editProduct(nonExistentProduct)
@@ -105,10 +105,9 @@ describe('ProductList', () => {
 
   it('не изменяет другие продукты в списке', () => {
     const store = useProductsStore()
-    const { addProduct, editProduct } = store
+    const { loadDemoProducts, editProduct } = store
     const { products } = storeToRefs(store)
-    addProduct({ name: 'Гречка', proteins: 4.2, fats: 1.1, carbohydrates: 21.3, calories: 111.9 })
-    addProduct({ name: 'Творог', proteins: 18, fats: 2, carbohydrates: 3.3, calories: 103 })
+    loadDemoProducts()
 
     const firstProduct = products.value[0]
     const updatedFirstProduct = { ...firstProduct, name: 'Гречка отварная' }
@@ -119,5 +118,25 @@ describe('ProductList', () => {
     expect(products.value[0]?.name).toBe('Гречка отварная')
     // Второй продукт не изменился
     expect(products.value[1]?.name).toBe('Творог')
+    // Третий продукт не изменился
+    expect(products.value[2]?.name).toBe('Банан')
+    // Четвертый продукт не изменился
+    expect(products.value[3]?.name).toBe('Сметана')
+  })
+
+  it('сбрасывает список продуктов', async () => {
+    const store = useProductsStore()
+    const { loadDemoProducts, resetProducts } = store
+    const { products } = storeToRefs(store)
+    loadDemoProducts()
+    const wrapper = mount(ProductList)
+
+    expect(wrapper.text()).toContain('Гречка')
+
+    resetProducts()
+
+    await flushPromises()
+    expect(wrapper.text()).not.toContain('Гречка')
+    expect(products.value.length).toBe(0)
   })
 })

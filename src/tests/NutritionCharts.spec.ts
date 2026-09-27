@@ -7,7 +7,7 @@ import { useDailyMealsStore } from '@/stores/dailyMeals'
 import { useProductsStore } from '@/stores/products'
 import { useNutritionStore } from '@/stores/nutrition'
 
-describe('DailyMeals', () => {
+describe('NutritionCharts', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     globalThis.ResizeObserver = class {
@@ -27,16 +27,11 @@ describe('DailyMeals', () => {
   it('отображает процент потребления от нормы из стора', async () => {
     const wrapper = mount(NutritionCharts)
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
-    const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
-    addProduct({ name: 'Творог', proteins: 18, fats: 2, carbohydrates: 3.3, calories: 103 })
-    addProduct({ name: 'Сметана', proteins: 2.6, fats: 25, carbohydrates: 2.5, calories: 248 })
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
     const dailyMealsStore = useDailyMealsStore()
-    const { addEntry } = dailyMealsStore
-    addEntry({ productId: products.value[0]!.id, weight: 450 })
-    addEntry({ productId: products.value[1]!.id, weight: 600 })
-    addEntry({ productId: products.value[2]!.id, weight: 120 })
+    const { loadDemoDailyMeals } = dailyMealsStore
+    loadDemoDailyMeals()
     await flushPromises()
     await wrapper.find('[data-test="progress-overview-chart"]').trigger('click')
     const svg = wrapper.find('svg')
@@ -56,16 +51,11 @@ describe('DailyMeals', () => {
   it('отображает потребление от нормы в абсолютных значениях из стора', async () => {
     const wrapper = mount(NutritionCharts)
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
-    const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
-    addProduct({ name: 'Творог', proteins: 18, fats: 2, carbohydrates: 3.3, calories: 103 })
-    addProduct({ name: 'Сметана', proteins: 2.6, fats: 25, carbohydrates: 2.5, calories: 248 })
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
     const dailyMealsStore = useDailyMealsStore()
-    const { addEntry } = dailyMealsStore
-    addEntry({ productId: products.value[0]!.id, weight: 450 })
-    addEntry({ productId: products.value[1]!.id, weight: 600 })
-    addEntry({ productId: products.value[2]!.id, weight: 120 })
+    const { loadDemoDailyMeals } = dailyMealsStore
+    loadDemoDailyMeals()
     await flushPromises()
     await wrapper.find('[data-test="progress-trend-chart"]').trigger('click')
     const svg = wrapper.find('svg')
@@ -92,16 +82,11 @@ describe('DailyMeals', () => {
   it('отображает распределение нутриентов из стора', async () => {
     const wrapper = mount(NutritionCharts)
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
-    const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
-    addProduct({ name: 'Творог', proteins: 18, fats: 2, carbohydrates: 3.3, calories: 103 })
-    addProduct({ name: 'Сметана', proteins: 2.6, fats: 25, carbohydrates: 2.5, calories: 248 })
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
     const dailyMealsStore = useDailyMealsStore()
-    const { addEntry } = dailyMealsStore
-    addEntry({ productId: products.value[0]!.id, weight: 450 })
-    addEntry({ productId: products.value[1]!.id, weight: 600 })
-    addEntry({ productId: products.value[2]!.id, weight: 120 })
+    const { loadDemoDailyMeals } = dailyMealsStore
+    loadDemoDailyMeals()
     await flushPromises()
     await wrapper.find('[data-test="daily-composition-chart"]').trigger('click')
     const svg = wrapper.find('svg')

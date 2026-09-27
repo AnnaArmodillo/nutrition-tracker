@@ -14,32 +14,26 @@ describe('DailyMeals', () => {
 
   it('отображает список потребленных продуктов из стора', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
-    const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
-    const { addEntry } = dailyMealsStore
-    const banana = products.value[0]
-    expect(banana?.id).toBeDefined()
-    addEntry({ productId: banana!.id, weight: 100 })
+    const { loadDemoDailyMeals } = dailyMealsStore
+    loadDemoDailyMeals()
     await flushPromises()
     expect(wrapper.text()).toContain('Банан')
   })
 
   it('отображает список потребленных продуктов из стора при смене даты', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
-    const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
-    const { addEntry } = dailyMealsStore
-    const banana = products.value[0]
-    expect(banana?.id).toBeDefined()
-    addEntry({ productId: banana!.id, weight: 100 })
+    const { loadDemoDailyMeals } = dailyMealsStore
+    loadDemoDailyMeals()
     await flushPromises()
     expect(wrapper.text()).toContain('Банан')
 
@@ -50,119 +44,116 @@ describe('DailyMeals', () => {
 
   it('отображается превышение нормы', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { addEntry } = dailyMealsStore
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
     addEntry({ productId: banana!.id, weight: 1000 })
 
     const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+    const { loadDemoNorm } = nutritionStore
+    loadDemoNorm()
     await flushPromises()
     expect(wrapper.text()).toContain('Перебор')
   })
 
   it('отображается нахождение в пределах нормы', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { addEntry } = dailyMealsStore
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
     addEntry({ productId: banana!.id, weight: 600 })
 
     const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+    const { loadDemoNorm } = nutritionStore
+    loadDemoNorm()
     await flushPromises()
     expect(wrapper.text()).toContain('Норма')
   })
 
   it('отображается небольшой перебор', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { addEntry } = dailyMealsStore
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
     addEntry({ productId: banana!.id, weight: 700 })
 
     const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+    const { loadDemoNorm } = nutritionStore
+    loadDemoNorm()
     await flushPromises()
     expect(wrapper.text()).toContain('Небольшой перебор')
   })
 
   it('отображается небольшой недобор', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { addEntry } = dailyMealsStore
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
     addEntry({ productId: banana!.id, weight: 400 })
 
     const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+    const { loadDemoNorm } = nutritionStore
+    loadDemoNorm()
     await flushPromises()
     expect(wrapper.text()).toContain('Почти норма')
   })
 
   it('отображается недобор', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { addEntry } = dailyMealsStore
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
     addEntry({ productId: banana!.id, weight: 100 })
 
     const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
+    const { loadDemoNorm } = nutritionStore
+    loadDemoNorm()
     await flushPromises()
     expect(wrapper.text()).toContain('Нужно потреблять больше')
   })
 
   it('добавляется новая запись', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { entriesByDateWithNutrients } = storeToRefs(dailyMealsStore)
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
 
-    const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
     await flushPromises()
 
     await wrapper.find('[data-test="add-meal-entry-btn"]').trigger('click')
@@ -177,24 +168,21 @@ describe('DailyMeals', () => {
 
   it('редактируется выбранная запись', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { addEntry } = dailyMealsStore
     const { entriesByDateWithNutrients } = storeToRefs(dailyMealsStore)
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
     addEntry({ productId: banana!.id, weight: 600 })
     addEntry({ productId: banana!.id, weight: 100 })
     const meal = entriesByDateWithNutrients.value[0]
     expect(meal).toBeDefined()
 
-    const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
     await flushPromises()
 
     await wrapper.find(`[data-test="${meal!.id}"]`).trigger('click')
@@ -208,23 +196,20 @@ describe('DailyMeals', () => {
 
   it('удаляется запись', async () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
+    const { loadDemoProducts } = productsStore
     const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    loadDemoProducts()
 
     const wrapper = mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
     const { addEntry } = dailyMealsStore
     const { entriesByDateWithNutrients } = storeToRefs(dailyMealsStore)
-    const banana = products.value[0]
+    const banana = products.value?.find(product => product.name === 'Банан')
     expect(banana?.id).toBeDefined()
     addEntry({ productId: banana!.id, weight: 600 })
     const meal = entriesByDateWithNutrients.value[0]
     expect(meal).toBeDefined()
 
-    const nutritionStore = useNutritionStore()
-    const { updateDailyNorm } = nutritionStore
-    updateDailyNorm({ proteins: 104, fats: 46, carbohydrates: 138, calories: 1384 })
     await flushPromises()
 
     await wrapper.find(`[data-test="remove-meal-${meal!.id}-btn"]`).trigger('click')
@@ -249,17 +234,14 @@ describe('DailyMeals', () => {
 
   it('если редактируемой записи нет в сторе, то стор не обновляется', () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
-    const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
 
     mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
-    const { addEntry, editEntry } = dailyMealsStore
+    const { loadDemoDailyMeals, editEntry } = dailyMealsStore
     const { entries } = storeToRefs(dailyMealsStore)
-    const banana = products.value[0]
-    expect(banana?.id).toBeDefined()
-    addEntry({ productId: banana!.id, weight: 600 })
+    loadDemoDailyMeals()
 
     const initialEntries = [ ...entries.value ]
     const nonExistentEntry = { id: 666, productId: 1, weight: 100, date: '2022-12-12' }
@@ -270,17 +252,14 @@ describe('DailyMeals', () => {
 
   it('при добавлении записи с несуществующим продуктом не увеличивается количество нутриентов', () => {
     const productsStore = useProductsStore()
-    const { addProduct } = productsStore
-    const { products } = storeToRefs(productsStore)
-    addProduct({ name: 'Банан', proteins: 1.5, fats: 0.2, carbohydrates: 21.8, calories: 143 })
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
 
     mount(DailyMeals)
     const dailyMealsStore = useDailyMealsStore()
-    const { addEntry } = dailyMealsStore
+    const { addEntry, loadDemoDailyMeals } = dailyMealsStore
     const { totalNutrientsByDate } = storeToRefs(dailyMealsStore)
-    const banana = products.value[0]
-    expect(banana?.id).toBeDefined()
-    addEntry({ productId: banana!.id, weight: 100 })
+    loadDemoDailyMeals()
     const initialNutrients = { ...totalNutrientsByDate.value }
 
     addEntry({ productId: 666, weight: 100 })
@@ -305,5 +284,34 @@ describe('DailyMeals', () => {
     // Продукт не добавился
     expect(entries.value.length).toBe(0)
     expect(wrapper.text()).toContain('Добавление записи') // Форма не закрылась
+  })
+
+  it('сбрасываются потребленные за день продукты', async () => {
+    const productsStore = useProductsStore()
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
+
+    const dailyMealsStore = useDailyMealsStore()
+    const { loadDemoDailyMeals, resetEntries } = dailyMealsStore
+    const { entries } = storeToRefs(dailyMealsStore)
+    loadDemoDailyMeals()
+
+    expect(entries.value.length).toBe(9)
+    resetEntries()
+    await flushPromises()
+    expect(entries.value.length).toBe(0)
+  })
+
+  it('загружается потребление из демо-данных', async () => {
+    const productsStore = useProductsStore()
+    const { loadDemoProducts } = productsStore
+    loadDemoProducts()
+
+    const dailyMealsStore = useDailyMealsStore()
+    const { loadDemoDailyMeals } = dailyMealsStore
+    const { entries } = storeToRefs(dailyMealsStore)
+    loadDemoDailyMeals()
+
+    expect(entries.value.length).toBe(9)
   })
 })
